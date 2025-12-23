@@ -52,7 +52,7 @@ jobs:
         git push origin main
     
     - name: Deploy to Vercel (if using Vercel)
-      if: steps.verify-changed-files.outputs.changed == 'true' && secrets.VERCEL_TOKEN != ''
+      if: steps.verify-changed-files.outputs.changed == 'true'
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
