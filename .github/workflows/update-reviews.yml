@@ -53,8 +53,17 @@ jobs:
         git commit -m "Update Google reviews [skip ci]"
         git push origin main
     
-    - name: Deploy to Vercel (if using Vercel)
-      if: steps.verify-changed-files.outputs.changed == 'true'
+    - name: Check if Vercel is configured
+      id: check-vercel
+      run: |
+        if [ -n "${{ secrets.VERCEL_TOKEN }}" ]; then
+          echo "configured=true" >> $GITHUB_OUTPUT
+        else
+          echo "configured=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Deploy to Vercel (optional)
+      if: steps.verify-changed-files.outputs.changed == 'true' && steps.check-vercel.outputs.configured == 'true'
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
