@@ -28,6 +28,8 @@ export default function ReviewsCarousel() {
   const [loading, setLoading] = useState<boolean>(true)
   const [currentSlide, setCurrentSlide] = useState<number>(0)
   const [reviewsPerSlide, setReviewsPerSlide] = useState<number>(1)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   useEffect(() => {
     const updateReviewsPerSlide = () => {
@@ -92,6 +94,32 @@ export default function ReviewsCarousel() {
     return reviews.slice(start, end)
   }
 
+  // Swipe gesture handlers
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      nextSlide()
+    }
+    if (isRightSwipe) {
+      prevSlide()
+    }
+  }
+
   if (loading) {
     return (
       <section className="bg-black py-12 sm:py-16 lg:py-20">
@@ -143,10 +171,13 @@ export default function ReviewsCarousel() {
         <div className="relative">
           <div className="overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-500 ease-in-out touch-pan-y"
               style={{
                 transform: `translateX(-${currentSlide * (100 / reviewsPerSlide)}%)`,
               }}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
             >
               {reviews.map((review, index) => (
                 <div
@@ -202,7 +233,7 @@ export default function ReviewsCarousel() {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 md:-translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="absolute left-2 sm:left-4 md:-left-8 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Previous reviews"
               >
                 <svg
@@ -221,7 +252,7 @@ export default function ReviewsCarousel() {
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 md:translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+                className="absolute right-2 sm:right-4 md:-right-8 top-1/2 -translate-y-1/2 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Next reviews"
               >
                 <svg
@@ -248,10 +279,10 @@ export default function ReviewsCarousel() {
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${
+                  className={`w-3 h-3 sm:w-3 sm:h-3 rounded-full transition-all touch-manipulation ${
                     currentSlide === index
-                      ? 'bg-red-600 w-6 sm:w-8'
-                      : 'bg-gray-600 hover:bg-gray-500'
+                      ? 'bg-red-600 w-8 sm:w-10'
+                      : 'bg-gray-600 hover:bg-gray-500 active:bg-gray-400'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
