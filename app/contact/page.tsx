@@ -3,8 +3,14 @@
 import { useState, useEffect } from 'react'
 import { contactInfo } from '@/config/contact'
 import Toast from '@/components/Toast'
+import CalendlyWidget from '@/components/CalendlyWidget'
 
 const FORMSUBMIT_EMAIL = 'sid111rawal@gmail.com' // Test email - change to production email later
+
+// Calendly URL - Replace with your actual Calendly link
+// Format: https://calendly.com/your-username/event-type-name
+// Or set NEXT_PUBLIC_CALENDLY_URL in .env.local
+const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL || ''
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,6 +24,7 @@ export default function Contact() {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('success')
+  const [activeTab, setActiveTab] = useState<'form' | 'booking'>('form')
 
   useEffect(() => {
     // Check if redirected from FormSubmit with success
@@ -149,10 +156,58 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Contact Form */}
+            {/* Contact Form / Booking */}
             <div className="bg-gray-900 border border-red-600 rounded-lg p-6 sm:p-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Send Us a Message</h2>
-              {submitted ? (
+              {/* Tabs */}
+              <div className="flex gap-2 mb-6 border-b border-gray-700">
+                <button
+                  onClick={() => setActiveTab('form')}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 font-semibold text-sm sm:text-base transition-colors ${
+                    activeTab === 'form'
+                      ? 'text-red-600 border-b-2 border-red-600'
+                      : 'text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  Send Message
+                </button>
+                <button
+                  onClick={() => setActiveTab('booking')}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 font-semibold text-sm sm:text-base transition-colors ${
+                    activeTab === 'booking'
+                      ? 'text-red-600 border-b-2 border-red-600'
+                      : 'text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  Book Appointment
+                </button>
+              </div>
+
+              {activeTab === 'booking' ? (
+                // Calendly Booking Widget
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Schedule Your Appointment</h2>
+                  {CALENDLY_URL ? (
+                    <CalendlyWidget url={CALENDLY_URL} height="700px" />
+                  ) : (
+                    <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 sm:p-12 text-center">
+                      <svg className="w-16 h-16 text-red-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <h3 className="text-xl font-bold text-white mb-2">Calendly Not Configured</h3>
+                      <p className="text-gray-400 mb-4">
+                        Please add your Calendly URL to enable online booking.
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Add <code className="bg-gray-900 px-2 py-1 rounded">NEXT_PUBLIC_CALENDLY_URL</code> to your environment variables.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // Contact Form
+                <>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">Send Us a Message</h2>
+                  {submitted ? (
                 <div className="bg-green-900 border border-green-600 rounded-lg p-5 sm:p-6 text-center">
                   <p className="text-green-300 text-base sm:text-lg font-semibold">
                     Thank you! Your message has been sent. We'll get back to you soon.
@@ -238,6 +293,8 @@ export default function Contact() {
                     {isSubmitting ? 'Sending...' : 'Send Message'}
                   </button>
                 </form>
+                  )}
+                </>
               )}
             </div>
           </div>

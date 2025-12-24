@@ -68,7 +68,8 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                     width={360}
                     height={360}
                     className="w-48 h-48 sm:w-60 sm:h-60 object-contain"
-                    unoptimized
+                    loading="lazy"
+                    quality={85}
                   />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 text-center">
@@ -86,7 +87,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 bg-red-600 hover:bg-red-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition-colors z-10"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 md:-translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label="Previous slide"
       >
         <svg
@@ -105,7 +106,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 bg-red-600 hover:bg-red-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition-colors z-10"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 md:translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label="Next slide"
       >
         <svg

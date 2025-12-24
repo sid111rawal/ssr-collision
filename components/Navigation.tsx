@@ -41,9 +41,10 @@ export default function Navigation() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-white focus:outline-none p-2"
+            className="md:hidden text-white focus:outline-none p-3 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
           >
             <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {isOpen ? (

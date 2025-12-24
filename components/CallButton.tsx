@@ -9,7 +9,7 @@ export default function CallButton() {
   return (
     <a
       href={contactInfo.phoneLink}
-      className="fixed bottom-6 right-6 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl shadow-red-600/50 transition-all duration-300 flex items-center gap-3 px-4 sm:px-6 py-3 sm:py-4 group hover:scale-110"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-full shadow-2xl shadow-red-600/50 transition-all duration-300 flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 group hover:scale-110 active:scale-95 touch-manipulation"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-label="Call us"

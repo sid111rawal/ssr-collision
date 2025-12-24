@@ -27,7 +27,20 @@ export default function ReviewsCarousel() {
   const [totalReviews, setTotalReviews] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(true)
   const [currentSlide, setCurrentSlide] = useState<number>(0)
-  const [reviewsPerSlide] = useState<number>(3)
+  const [reviewsPerSlide, setReviewsPerSlide] = useState<number>(1)
+
+  useEffect(() => {
+    const updateReviewsPerSlide = () => {
+      if (window.innerWidth >= 768) {
+        setReviewsPerSlide(3)
+      } else {
+        setReviewsPerSlide(1)
+      }
+    }
+    updateReviewsPerSlide()
+    window.addEventListener('resize', updateReviewsPerSlide)
+    return () => window.removeEventListener('resize', updateReviewsPerSlide)
+  }, [])
 
   useEffect(() => {
     // Load reviews from static JSON file
@@ -189,7 +202,7 @@ export default function ReviewsCarousel() {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 bg-red-600 hover:bg-red-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition-colors z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 md:-translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Previous reviews"
               >
                 <svg
@@ -208,7 +221,7 @@ export default function ReviewsCarousel() {
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 bg-red-600 hover:bg-red-700 text-white p-3 sm:p-4 rounded-full shadow-lg transition-colors z-10"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 md:translate-x-8 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 sm:p-4 rounded-full shadow-lg transition-all z-10 touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Next reviews"
               >
                 <svg
